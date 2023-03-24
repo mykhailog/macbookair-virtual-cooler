@@ -78,6 +78,24 @@
                 transform: rotate(360deg);
             }
         }
+        @keyframes spin-slow {
+            0% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(180deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .spin-slow {
+            animation: spin-slow;
+            animation-duration: 12s;
+            animation-timing-function: cubic-bezier(0.1, 0.9, 0.2, 1);
+            animation-iteration-count: infinite;
+        }
+
         #icon {
             width: 100px;
             height: 100px;
@@ -114,42 +132,58 @@
 </div>
 <script>
     var audio = document.getElementById('audio');
-    var fadeTime = 5000; // fade in/out duration in ms
+    var fadeTime = 8000; // fade in/out duration in ms
     var volume = 0; // current volume
     var isPlaying = false;
     var playBtn = document.getElementById('play-btn');
 
     function fadeAudioIn() {
+        if(!isPlaying) {
+            return;
+        }
         audio.volume = volume;
         if (volume < 0.8) {
-            volume += 0.1;
-            setTimeout(fadeAudioIn, fadeTime / 10);
+            volume += 0.05;
+            setTimeout(fadeAudioIn, fadeTime / 20);
         }
     }
 
     function fadeAudioOut() {
+        if(isPlaying) {
+            return;
+        }
         audio.volume = volume;
         if (volume > 0) {
-            volume -= 0.1;
-            setTimeout(fadeAudioOut, fadeTime / 10);
+            volume -= 0.05;
+            if(volume < 0) {
+                volume =0;
+            }
+            setTimeout(fadeAudioOut, fadeTime / 20);
         } else {
             audio.pause();
             audio.currentTime = 0;
             volume = 0;
-            isPlaying = false;
+            // isPlaying = false;
             playBtn.classList.remove('playing');
         }
     }
     function toggleAudio() {
+        var icon = document.getElementById('icon');
         if (isPlaying) {
+            // icon.classList.remove('spin');
+            icon.classList.add('spin-slow');
+            isPlaying = false;
             fadeAudioOut();
-            document.getElementById('icon').classList.remove('spin');
+
+
         } else {
             audio.play();
-            fadeAudioIn();
             isPlaying = true;
+            fadeAudioIn();
             playBtn.classList.add('playing');
-            document.getElementById('icon').classList.add('spin');
+            icon.classList.remove('spin-slow');
+            icon.classList.add('spin');
+
 
         }
     }
