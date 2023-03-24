@@ -132,6 +132,7 @@
 </div>
 <script>
     var audio = document.getElementById('audio');
+    var icon = document.getElementById('icon');
     var fadeTime = 8000; // fade in/out duration in ms
     var volume = 0; // current volume
     var isPlaying = false;
@@ -164,13 +165,15 @@
             audio.currentTime = 0;
             volume = 0;
             // isPlaying = false;
+            icon.classList.remove('spin-slow');
+            icon.classList.remove('spin');
             playBtn.classList.remove('playing');
         }
     }
     function toggleAudio() {
-        var icon = document.getElementById('icon');
+
         if (isPlaying) {
-            // icon.classList.remove('spin');
+            icon.classList.remove('spin');
             icon.classList.add('spin-slow');
             isPlaying = false;
             fadeAudioOut();
